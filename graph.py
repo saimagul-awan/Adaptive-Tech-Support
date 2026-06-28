@@ -21,8 +21,7 @@ def rewrite_node(state):
 
     return state
 
-    def retrieve_node(state):
-
+def retrieve_node(state):
     docs = retrieve_documents(
         state["optimized_query"]
     )
@@ -31,7 +30,7 @@ def rewrite_node(state):
 
     return state
 
-    def grade_node(state):
+def grade_node(state):
 
     score = grade_documents(
         state["original_query"],
@@ -42,7 +41,7 @@ def rewrite_node(state):
 
     return state
 
-    def websearch_node(state):
+def websearch_node(state):
 
     results = web_search(
         state["original_query"]
@@ -52,7 +51,7 @@ def rewrite_node(state):
 
     return state
 
-    def websearch_node(state):
+def websearch_node(state):
 
     results = web_search(
         state["original_query"]
@@ -62,7 +61,7 @@ def rewrite_node(state):
 
     return state
 
-    def hallucination_node(state):
+def hallucination_node(state):
 
     docs = state["documents"]
 
@@ -78,14 +77,14 @@ def rewrite_node(state):
 
     return state
 
-    def route_after_grade(state):
+def route_after_grade(state):
 
     if state["relevance_score"] == "yes":
         return "generate"
 
     return "websearch"
 
-    def route_after_hallucination(state):
+def route_after_hallucination(state):
 
     if state["hallucination_check"] == "passed":
         return END
@@ -97,7 +96,7 @@ def rewrite_node(state):
 
     return "rewrite"
 
-    workflow = StateGraph(GraphState)
+workflow = StateGraph(GraphState)
 
 workflow.add_node("rewrite", rewrite_node)
 workflow.add_node("retrieve", retrieve_node)
