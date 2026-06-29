@@ -10,3 +10,5 @@ duckduckgo-search
 sentence-transformers
 python-dotenv
 faiss-cpu
+torch
+torchvision
