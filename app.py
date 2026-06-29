@@ -3,7 +3,23 @@ import traceback
 
 from graph import graph
 
-st.title("Adaptive Technical Support Assistant")
+st.set_page_config(
+    page_title="Adaptive Technical Support",
+    page_icon="🤖",
+    layout="wide"
+)
+
+st.title("🤖 Adaptive Technical Support Assistant")
+
+st.markdown("""
+
+This assistant answers questions using:
+- 📘 Orion SmartHub Manual (RAG)
+- 🌐 Web Search (if documentation is insufficient)
+- ✅ QA Relevance Checking
+- 🧠 Hallucination Detection
+- 🔄 LangGraph Workflow
+""")
 
 question = st.text_input("Enter your technical question:")
 
