@@ -20,9 +20,7 @@ Documents:
 
 Respond ONLY with valid JSON.
 
-{{
-  "relevance_score": "yes"
-}}
+{"relevance_score": "yes"}
 
 Return "yes" if the documents are relevant.
 Return "no" otherwise.
@@ -53,15 +51,11 @@ Compare the answer against the documents.
 
 Return ONLY JSON.
 
-{{
-  "hallucination_check": "passed"
-}}
+{  "hallucination_check": "passed" }
 
 or
 
-{
-"hallucination_check":"failed"
-}
+{ "hallucination_check":"failed" }
 
 Documents:
 
