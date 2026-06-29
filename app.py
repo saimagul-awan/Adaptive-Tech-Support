@@ -60,7 +60,8 @@ if st.button("Get Answer"):
                 st.write("**Hallucination Check:**")
                 st.code(result["hallucination_check"])
 
-            except Exception as e:
+import traceback
 
-                st.error("An error occurred while processing your request.")
-                st.exception(e)
+except Exception as e:
+    st.error("An error occurred while processing your request.")
+    st.code(traceback.format_exc())
