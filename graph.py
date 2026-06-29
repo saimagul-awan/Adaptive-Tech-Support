@@ -29,7 +29,8 @@ def retrieve_node(state):
     return state
 
 def grade_node(state):
-print(">>> grade_node")
+    print(">>> grade_node")  # Properly indented
+    # Rest of your function code goes here...
     score = grade_documents(
         state["original_query"],
         state["documents"]
