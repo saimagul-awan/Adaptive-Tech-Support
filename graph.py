@@ -12,16 +12,14 @@ from agents import (
 )
 
 def rewrite_node(state):
-
-    question = state["original_query"]
-
-    optimized = rewrite_query(question)
-
+    print(">>> rewrite_node")
+    optimized = rewrite_query(state["original_query"])
     state["optimized_query"] = optimized
-
     return state
 
+
 def retrieve_node(state):
+    print(">>> retrieve_node")
     docs = retrieve_documents(
         state["optimized_query"]
     )
@@ -31,7 +29,7 @@ def retrieve_node(state):
     return state
 
 def grade_node(state):
-
+print(">>> grade_node")
     score = grade_documents(
         state["original_query"],
         state["documents"]
@@ -42,7 +40,7 @@ def grade_node(state):
     return state
 
 def websearch_node(state):
-
+print(">>> websearch_node")
     results = web_search(
         state["original_query"]
     )
@@ -52,7 +50,7 @@ def websearch_node(state):
     return state
 
 def generate_node(state):
-
+print(">>> generate_node")
     docs = state["documents"]
 
     if len(docs) > 0 and hasattr(docs[0], "page_content"):
@@ -68,7 +66,7 @@ def generate_node(state):
     return state
     
 def hallucination_node(state):
-
+print(">>> hallucination_node")
     docs = state["documents"]
 
     if len(docs) > 0 and hasattr(docs[0], "page_content"):
