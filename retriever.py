@@ -7,7 +7,13 @@ from langchain_community.vectorstores import Chroma
 import os
 
 # Change this path if your file is in a different location
-file_path = "orion_hub_manual .txt"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
+file_path = BASE_DIR / "orion_hub_manual .txt"
+
+loader = TextLoader(str(file_path))
 
 print("File exists:", os.path.exists(file_path))
 
