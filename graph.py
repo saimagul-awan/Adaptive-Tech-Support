@@ -51,15 +51,6 @@ def websearch_node(state):
 
     return state
 
-def websearch_node(state):
-
-    results = web_search(
-        state["original_query"]
-    )
-
-    state["documents"] = results
-
-    return state
 def generate_node(state):
 
     docs = state["documents"]
