@@ -53,9 +53,9 @@ Compare the answer against the documents.
 
 Return ONLY JSON.
 
-{
-"hallucination_check":"passed"
-}
+{{
+  "hallucination_check": "passed"
+}}
 
 or
 
