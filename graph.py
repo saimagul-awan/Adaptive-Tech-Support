@@ -60,7 +60,22 @@ def websearch_node(state):
     state["documents"] = results
 
     return state
+def generate_node(state):
 
+    docs = state["documents"]
+
+    if len(docs) > 0 and hasattr(docs[0], "page_content"):
+        docs = [d.page_content for d in docs]
+
+    answer = generate_answer(
+        state["original_query"],
+        docs
+    )
+
+    state["generation"] = answer
+
+    return state
+    
 def hallucination_node(state):
 
     docs = state["documents"]
