@@ -1,4 +1,5 @@
 import streamlit as st
+import traceback
 from graph import graph
 
 st.set_page_config(
@@ -60,7 +61,7 @@ if st.button("Get Answer"):
                 st.write("**Hallucination Check:**")
                 st.code(result["hallucination_check"])
 
-import traceback
+
 
 except Exception as e:
     st.error("An error occurred while processing your request.")
