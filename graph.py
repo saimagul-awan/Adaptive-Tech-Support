@@ -8,29 +8,39 @@ from agents import (
     grade_documents,
     web_search,
     generate_answer,
-    check_hallucination
+    check_hallucination,
 )
 
-def rewrite_node(state):
-    print(">>> rewrite_node")
+
+# -----------------------------
+# Rewrite Query
+# -----------------------------
+def rewrite_node(state: GraphState):
+
     optimized = rewrite_query(state["original_query"])
+
     state["optimized_query"] = optimized
+
     return state
 
 
-def retrieve_node(state):
-    print(">>> retrieve_node")
-    docs = retrieve_documents(
-        state["optimized_query"]
-    )
+# -----------------------------
+# Retrieve Documents
+# -----------------------------
+def retrieve_node(state: GraphState):
+
+    docs = retrieve_documents(state["optimized_query"])
 
     state["documents"] = docs
 
     return state
 
-def grade_node(state):
-    print(">>> grade_node")  # Properly indented
-    # Rest of your function code goes here...
+
+# -----------------------------
+# Grade Retrieved Documents
+# -----------------------------
+def grade_node(state: GraphState):
+
     score = grade_documents(
         state["original_query"],
         state["documents"]
@@ -40,22 +50,29 @@ def grade_node(state):
 
     return state
 
-def websearch_node(state):
-print(">>> websearch_node")
-    results = web_search(
-        state["original_query"]
-    )
 
-    state["documents"] = results
+# -----------------------------
+# Web Search
+# -----------------------------
+def websearch_node(state: GraphState):
+
+    docs = web_search(state["original_query"])
+
+    state["documents"] = docs
 
     return state
 
-def generate_node(state):
-print(">>> generate_node")
+
+# -----------------------------
+# Generate Answer
+# -----------------------------
+def generate_node(state: GraphState):
+
     docs = state["documents"]
 
+    # Convert LangChain Documents to text
     if len(docs) > 0 and hasattr(docs[0], "page_content"):
-        docs = [d.page_content for d in docs]
+        docs = [doc.page_content for doc in docs]
 
     answer = generate_answer(
         state["original_query"],
@@ -65,13 +82,17 @@ print(">>> generate_node")
     state["generation"] = answer
 
     return state
-    
-def hallucination_node(state):
-print(">>> hallucination_node")
+
+
+# -----------------------------
+# Hallucination Check
+# -----------------------------
+def hallucination_node(state: GraphState):
+
     docs = state["documents"]
 
     if len(docs) > 0 and hasattr(docs[0], "page_content"):
-        docs = [d.page_content for d in docs]
+        docs = [doc.page_content for doc in docs]
 
     result = check_hallucination(
         docs,
@@ -82,25 +103,37 @@ print(">>> hallucination_node")
 
     return state
 
-def route_after_grade(state):
 
-    if state["relevance_score"] == "yes":
+# -----------------------------
+# Route after grading
+# -----------------------------
+def route_after_grade(state: GraphState):
+
+    if state["relevance_score"].lower() == "yes":
         return "generate"
 
     return "websearch"
 
-def route_after_hallucination(state):
 
-    if state["hallucination_check"] == "passed":
+# -----------------------------
+# Route after hallucination
+# -----------------------------
+def route_after_hallucination(state: GraphState):
+
+    if state["hallucination_check"].lower() == "passed":
         return END
 
-    if state["loop_count"] >= 2:
+    if state.get("loop_count", 0) >= 2:
         return END
 
-    state["loop_count"] += 1
+    state["loop_count"] = state.get("loop_count", 0) + 1
 
-    return "rewrite"
+    return "generate"
 
+
+# -----------------------------
+# Build Graph
+# -----------------------------
 workflow = StateGraph(GraphState)
 
 workflow.add_node("rewrite", rewrite_node)
@@ -112,43 +145,28 @@ workflow.add_node("hallucination", hallucination_node)
 
 workflow.set_entry_point("rewrite")
 
-workflow.add_edge(
-    "rewrite",
-    "retrieve"
-)
-
-workflow.add_edge(
-    "retrieve",
-    "grade"
-)
-
-workflow.add_edge(
-    "websearch",
-    "generate"
-)
-
-workflow.add_edge(
-    "generate",
-    "hallucination"
-)
+workflow.add_edge("rewrite", "retrieve")
+workflow.add_edge("retrieve", "grade")
 
 workflow.add_conditional_edges(
     "grade",
     route_after_grade,
     {
         "generate": "generate",
-        "websearch": "websearch"
-    }
+        "websearch": "websearch",
+    },
 )
+
+workflow.add_edge("websearch", "generate")
+workflow.add_edge("generate", "hallucination")
 
 workflow.add_conditional_edges(
     "hallucination",
     route_after_hallucination,
     {
-        "rewrite": "rewrite",
-        END: END
-    }
+        "generate": "generate",
+        END: END,
+    },
 )
 
 graph = workflow.compile()
-
