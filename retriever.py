@@ -11,7 +11,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
-file_path = BASE_DIR / "orion_hub_manual .txt"
+file_path = BASE_DIR / "orion_hub_manual.txt"
 
 loader = TextLoader(str(file_path))
 
