@@ -10,27 +10,22 @@ Question:
 """
 
 grading_prompt = """
-You are a QA Engineer.
-
-Determine whether the retrieved documents are relevant.
-
-Return ONLY JSON.
-
-{
-    "relevance_score":"yes"
-}
-
-or
-
-{
-    "relevance_score":"no"
-}
+You are a relevance grader.
 
 Question:
 {question}
 
 Documents:
 {documents}
+
+Respond ONLY with valid JSON.
+
+{{
+  "relevance_score": "yes"
+}}
+
+Return "yes" if the documents are relevant.
+Return "no" otherwise.
 """
 
 generate_prompt = """
